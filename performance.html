@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <title>Full Setlist | ATC Music Night</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"><a href="index.html">ATC <span>MUSIC NIGHT</span></a></div>
+        <a href="index.html" class="back-link">← Back Home</a>
+    </nav>
+
+    <section class="subpage-header">
+        <h1>Full Performance Archive</h1>
+        <p>Explore all the song setlist below.</p>
+    </section>
+
+    <section class="video-grid-container section-padding">
+        <div id="video-grid" class="grid-25">
+            </div>
+    </section>
+
+    <div id="video-lightbox" class="lightbox" onclick="closeVideoLightbox(event)">
+        <div class="lightbox-content">
+            <span class="close-btn" onclick="closeVideoLightbox()">&times;</span>
+            <div id="iframe-container"></div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 ATC Music Night</p>
+        </div>
+    </footer>
+
+<script>
+    // --- 🎥 LIST OF VIDEOS WITH METADATA ---
+    const videoData = [
+        { id: 'D1zqZMGxBwE', title: '海芋恋 & Shape Of You', subtitle: 'Live Performance' },
+        { id: 'kH_ArqloYaY', title: 'Just The Two Of US', subtitle: 'Live Performance' },
+        { id: 'SoQ38lpoV6A', title: '突然好想你', subtitle: 'Live Performance' },
+        { id: 'rztwUKOd8NI', title: '李白', subtitle: 'Live Performance' },
+        { id: 'RzncZpjrncU', title: 'Sweet Boy', subtitle: 'Live Performance' },
+        { id: 'e99TOqC5Ceo', title: 'Sweater Weather', subtitle: 'Live Performance' },
+        { id: 'WWADV2GsTEI', title: 'Video Game', subtitle: 'Live Performance' },
+        { id: 'ThAehxs_0H8', title: '有点甜', subtitle: 'Live Performance' },
+        { id: '0ysnyXZAapA', title: '今天你要嫁给我', subtitle: 'Live Performance' },
+        { id: '8w2Qtvsx-cY', title: 'BIG FISH AND BEGONIA', subtitle: 'Live Performance' },
+        { id: 'P9id5m5-Ls4', title: '天天好天', subtitle: 'Live Performance' },
+        { id: 'k9PX1K0ec_c', title: 'Untitled #1', subtitle: 'Live Performance' },
+        { id: 'NWk4qAUUjTM', title: 'Untitled #2', subtitle: 'Live Performance' },
+        { id: 'Jl-2kkR589M', title: 'Somthing In The Way', subtitle: 'Live Performance' },
+        { id: '_31OpcrUjyo', title: 'Come As You Are', subtitle: 'Live Performance' },
+        { id: '0m-sNd8I_EY', title: '窗 & 眨眼就走', subtitle: 'Live Performance' }
+    ];
+
+    const grid = document.getElementById('video-grid');
+    const lightbox = document.getElementById('video-lightbox');
+    const iframeContainer = document.getElementById('iframe-container');
+
+    // --- Generate Grid ---
+    function createGrid() {
+        videoData.forEach((video) => {
+            const videoItem = document.createElement('div');
+            videoItem.className = 'video-item';
+            
+            // Fixed: Now correctly uses the subtitle property defined above
+            videoItem.innerHTML = `
+                <div class="video-thumbnail">
+                    <img src="https://img.youtube.com/vi/${video.id}/mqdefault.jpg" alt="${video.title}">
+                    <div class="play-overlay-small">▶</div>
+                </div>
+                <div class="video-meta">
+                    <h4>${video.title}</h4>
+                    <span>${video.subtitle}</span>
+                </div>
+            `;
+            
+            videoItem.addEventListener('click', () => {
+                openVideoLightbox(video.id);
+            });
+            grid.appendChild(videoItem);
+        });
+    }
+
+    // --- Lightbox Functions ---
+    function openVideoLightbox(videoId) {
+        // Use the embed URL to avoid "Refused to connect" errors
+        iframeContainer.innerHTML = `
+            <iframe width="100%" height="100%" 
+            src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0" 
+            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        `;
+        lightbox.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeVideoLightbox(e) {
+        if (!e || e.target === lightbox || e.target.className === 'close-btn') {
+            iframeContainer.innerHTML = ''; 
+            lightbox.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeVideoLightbox();
+    });
+
+    createGrid();
+</script>
+</body>
+</html>
