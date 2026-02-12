@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Gallery | ATC Music Night</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Montserrat:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo"><a href="index.html">ATC <span>MUSIC NIGHT</span></a></div>
+        <a href="index.html" class="back-link">← Back Home</a>
+    </nav>
+
+    <section class="subpage-header">
+        <h1>Event Gallery</h1>
+        <p>Click a photo to view full size or download.</p>
+    </section>
+
+    <section class="photo-gallery-container section-padding">
+        <div id="gallery-grid" class="masonry-grid">
+            </div>
+        
+        <div style="text-align: center; margin-top: 40px;">
+            <button id="load-more-btn" class="cta-btn">Load More Photos</button>
+        </div>
+    </section>
+
+    <div id="photo-lightbox" class="lightbox" onclick="closeLightbox(event)">
+        <span class="close-btn" onclick="closeLightbox()">&times;</span>
+        <img id="lightbox-img" src="" alt="Full Screen View">
+        <a id="download-btn" href="" download class="lightbox-download-btn">Download Photo</a>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 ATC Music Night</p>
+    </footer>
+
+    <script>
+        // --- CONFIGURATION ---
+        const totalPhotos = 134; 
+        const batchSize = 12; // Number of photos to load at a time
+        let currentCount = 1; // Start tracker
+
+        const galleryGrid = document.getElementById('gallery-grid');
+        const loadMoreBtn = document.getElementById('load-more-btn');
+
+        // --- FUNCTION TO LOAD PHOTOS ---
+        function loadNextBatch() {
+            const end = currentCount + batchSize;
+            
+            // Loop until batch size OR total photos reached
+            for (let i = currentCount; i < end && i <= totalPhotos; i++) {
+                
+                // Construct filename: edited/Music Night (1).jpg
+                const fileName = `edited/Music Night (${i}).jpg`; 
+                
+                const item = document.createElement('div');
+                item.className = 'masonry-item fade-in-up'; // Added animation class
+                
+                // Click opens Lightbox
+                item.onclick = function() { openLightbox(fileName); };
+
+                // Image HTML
+                item.innerHTML = `
+                    <img src="${fileName}" loading="lazy" alt="Gallery Photo ${i}">
+                `;
+
+                galleryGrid.appendChild(item);
+            }
+
+            // Update the counter
+            currentCount += batchSize;
+
+            // Hide button if all photos loaded
+            if (currentCount > totalPhotos) {
+                loadMoreBtn.style.display = 'none';
+            }
+        }
+
+        // Load the first batch immediately
+        loadNextBatch();
+
+        // Add event listener to button
+        loadMoreBtn.addEventListener('click', loadNextBatch);
+
+
+        // --- LIGHTBOX LOGIC ---
+        const lightbox = document.getElementById('photo-lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const downloadBtn = document.getElementById('download-btn');
+
+        function openLightbox(imageSrc) {
+            lightboxImg.src = imageSrc;
+            downloadBtn.href = imageSrc;
+            lightbox.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox(e) {
+            if (!e || e.target === lightbox || e.target.className === 'close-btn') {
+                lightbox.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        }
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLightbox(); });
+    </script>
+</body>
+</html>
